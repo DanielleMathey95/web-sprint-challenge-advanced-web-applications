@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { axiosWithAuth } from "../helpers/axiosWithAuth";
+import axiosWithAuth from "../helpers/axiosWithAuth";
 
 const Login = () => {
   const { push } = useHistory();
@@ -22,7 +22,7 @@ const Login = () => {
     setError('Username or Password are incorrect')
 
     axiosWithAuth()
-      .post("/api/login", form)
+      .post('/api/login', form)
       .then((response) => {
         localStorage.setItem("token", response.data.payload);
         push('/bubblepage')
