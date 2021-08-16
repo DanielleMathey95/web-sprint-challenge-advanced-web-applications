@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-
+import axiosWithAuth from "../helpers/axiosWithAuth";
 import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
-import fetchColorService from '../services/fetchColorService';
+import fetchColorService from "../services/fetchColorService";
 
 const BubblePage = () => {
   const [colors, setColors] = useState([]);
@@ -13,15 +13,47 @@ const BubblePage = () => {
   };
 
   const saveEdit = (editColor) => {
+    axiosWithAuth()
+      .put(`/api/colors/${editColor.id}`, editColor)
+      .then((response) => {
+        console.log(response);
+
+        let index = colors.findIndex((color) => color.id === editColor.id);
+        colors[index] = editColor;
+        setColors([...colors]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
+  useEffect(() => {
+    fetchColorService().then((response) => {
+      setColors(response);
+    });
+  }, []);
+
   const deleteColor = (colorToDelete) => {
+    axiosWithAuth()
+      .delete(`api/colors/${colorToDelete.id}`)
+      .then((response) => {
+        setColors(colors.filter((color) => color.id !== colorToDelete.id));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div className="container">
-      <ColorList colors={colors} editing={editing} toggleEdit={toggleEdit} saveEdit={saveEdit} deleteColor={deleteColor}/>
-      <Bubbles colors={colors}/>
+      <ColorList
+        colors={colors}
+        editing={editing}
+        toggleEdit={toggleEdit}
+        saveEdit={saveEdit}
+        deleteColor={deleteColor}
+      />
+      <Bubbles colors={colors} />
     </div>
   );
 };
