@@ -1,5 +1,4 @@
 import React from "react";
-import MutationObserver from "mutationobserver-shim";
 
 import { render, screen } from "@testing-library/react";
 import BubblePage from "./BubblePage";
